@@ -7,6 +7,7 @@
 typedef enum TokenType {
     TOKEN_IDENTIFIER,
     TOKEN_INT_LITERAL,  
+    TOKEN_SLASH,
     TOKEN_OPEN_BRACE,
     TOKEN_CLOSE_BRACE,
     TOKEN_OPEN_PAR,
@@ -176,6 +177,19 @@ static void scan_token (
         case '<': { 
             match(fp, '=') ? add_lex(ch, Token_list, count, line, TOKEN_LESS_OR_EQ):
                              add_lex(ch, Token_list, count, line, TOKEN_LESS);
+        }
+        case '/' : {
+            if(match(fp, '/')) {
+                int next_char;
+                while ((next_char = peek(fp)) != '\n' && next_char != EOF) fgetc(fp);
+                if (peek(fp) == '\n') {
+                    fgetc(fp);
+                    (*line)++;
+                }
+            } else {
+                add_lex(ch, Token_list, count, line, TOKEN_SLASH);
+              }
+            break;
         }
          default: {
             fprintf(stderr, "Unexpected character at line:%d\n", *line);
