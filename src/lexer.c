@@ -5,29 +5,23 @@
 #include <stdbool.h>
 
 typedef enum TokenType {
-    TOKEN_IDENTIFIER,
-    TOKEN_INT_LITERAL,  
-    TOKEN_SLASH,
-    TOKEN_OPEN_BRACE,
-    TOKEN_CLOSE_BRACE,
-    TOKEN_OPEN_PAR,
-    TOKEN_CLOSE_PAR,
-    TOKEN_SEMICOL,
-    TOKEN_PLUS,
-    TOKEN_MINUS,
-    TOKEN_STAR,
-    TOKEN_DOT,
-    TOKEN_COMMA,
-    TOKEN_EXCLAMATION,
+    //SINGLE CHARACTER TOKENS
+    TOKEN_OPEN_BRACE, TOKEN_CLOSE_BRACE, TOKEN_OPEN_PAR, TOKEN_CLOSE_PAR,
+    TOKEN_SEMICOL, TOKEN_PLUS, TOKEN_MINUS, TOKEN_STAR, TOKEN_DOT,
+    TOKEN_COMMA, TOKEN_EXCLAMATION, TOKEN_GREATER, 
+    TOKEN_LESS, TOKEN_EQUALS, TOKEN_SLASH,
+
+    // TWO CHARACTER TOKENS
+    TOKEN_STAR_EQ,
     TOKEN_EXCLAMATION_EQUAL,
-    TOKEN_EQUALS,
-    TOKEN_EQUALS_EQUALS,
-    TOKEN_GREATER,
     TOKEN_GREATER_OR_EQ,
-    TOKEN_LESS,
-    TOKEN_LESS_OR_EQ,
-    TOKEN_INT,
-    TOKEN_RET,
+    TOKEN_LESS_OR_EQ, 
+    TOKEN_EQUALS_EQUALS,
+
+    //LITERALS
+    TOKEN_IDENTIFIER,
+    TOKEN_INT_LITERAL,
+    TOKEN_STR_LITERAL,
 } TokenType;
 
 typedef struct Token {
@@ -178,6 +172,11 @@ static void scan_token (
             match(fp, '=') ? add_lex(ch, Token_list, count, line, TOKEN_LESS_OR_EQ):
                              add_lex(ch, Token_list, count, line, TOKEN_LESS);
         }
+        case '*': { 
+            match(fp, '=') ? add_lex(ch, Token_list, count, line, TOKEN_STAR_EQ):
+                             add_lex(ch, Token_list, count, line, TOKEN_STAR);
+        }
+
         case '/' : {
             if(match(fp, '/')) {
                 int next_char;
